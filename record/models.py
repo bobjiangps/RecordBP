@@ -18,7 +18,7 @@ class Person(models.Model):
     id_num = models.CharField(max_length=20, blank=True, null=True)
     brief = models.CharField(max_length=1000)
     detail = models.CharField(max_length=10000)
-    tag = models.ManyToManyField(Tag, blank=True, null=True)
+    tag = models.ManyToManyField(Tag, blank=True)
     visible = models.BooleanField(default=True)
     create_date = models.DateTimeField(default=timezone.now)
     update_date = models.DateTimeField(default=timezone.now)
