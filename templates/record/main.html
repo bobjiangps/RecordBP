@@ -2,26 +2,44 @@
 
 {% block content %}
 <div class="row" style="margin: 20px;">
-    <div class="col-lg-4 md-4" style="text-align: center;">
-        <div class="card">
-            <div class="card-body">
-                <h3><a href="geoip"><i class="fas fa-map-marker-alt"></i>&ensp;GeoIP</a></h3>
-            </div>
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="search-container" style="margin: 0px 20px; padding: 10px;">
+            <h5>{{own_ip}}</h5><br/>
+            <form action="{% url 'main' %}" method="post">
+                {% csrf_token %}
+            <label for="identification">Identity：</label><br>
+            <input id="identification" type="text" name="id-number" value="{{ identification }}" class='form-control mr-sm-2' required="true" placeholder='ID' style="width:200px;"><p></p>
+            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">查看</button>
+            {% if request.session.validate_error %}
+            <p style="color:red">{{request.session.validate_error}}</p>
+            {% endif %}
         </div>
     </div>
-    <div class="col-lg-4 md-4" style="text-align: center;">
-        <div class="card">
-            <div class="card-body">
-                <h3><a href="useragent"><i class="fab fa-internet-explorer"></i>&ensp;UserAgent</a></h3>
-            </div>
-        </div>
+    <div class="col-md-4"></div>
+</div>
+<hr width="60%" style="border:2px solid #BDB76B;"/>
+<div class="row" style="margin: 20px;">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+         <table name="capture-table" class="table table-sm table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">name</th>
+                    <th scope="col">brief</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for bp in person %}
+                    <td scope="col">{{ bp.name }}</td>
+                    <td scope="col">{{ bp.brief }}</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+        <hr width="30%" style="border:2px #BDB76B;"/>
     </div>
-    <div class="col-lg-4 md-4" style="text-align: center;">
-        <div class="card">
-            <div class="card-body">
-                <h3><a href="query"><i class="fas fa-search"></i>&ensp;Query</a></h3>
-            </div>
-        </div>
-    </div>
+    <div class="col-md-1"></div>
 </div>
 {% endblock %}
