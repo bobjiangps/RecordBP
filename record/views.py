@@ -5,13 +5,13 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Visitor, Person
 
 
-def main_page(request):
+def person_list_page(request):
     allowed_id = ["ProtectAnimal"]
     request.session['validate_error'] = False
     port = request.META.get("SERVER_PORT")
     if request.method == 'GET':
         record_visit(request, page_suffix=f"/port={port}")
-        return render(request, 'record/main.html')
+        return render(request, 'record/person_list.html')
     elif request.method == 'POST':
         id_num = request.POST["id-number"]
         if id_num in allowed_id:
@@ -21,7 +21,7 @@ def main_page(request):
         else:
             record_visit(request, page_suffix=f"/verify=false&id={id_num}&port={port}")
             request.session['validate_error'] = "错误身份信息"
-            return render(request, 'record/main.html')
+            return render(request, 'record/person_list.html')
 
 
 def pagination(request, filter_person):
@@ -35,7 +35,7 @@ def pagination(request, filter_person):
     except EmptyPage:
         # if page is out of range, deliver last page of results
         part_person = paginator.page(paginator.num_pages)
-    return render(request, 'record/main.html', {'person': part_person})
+    return render(request, 'record/person_list.html', {'person': part_person})
 
 
 def record_visit(request, page_suffix=""):

@@ -6,7 +6,7 @@
     <div class="col-md-4">
         <div class="search-container" style="margin: 0px 20px; padding: 10px;">
             <h5>{{own_ip}}</h5><br/>
-            <form action="{% url 'main' %}" method="post">
+            <form action="{% url 'person_list' %}" method="post">
                 {% csrf_token %}
             <label for="identification">Identity：</label><br>
             <input id="identification" type="text" name="id-number" value="{{ identification }}" class='form-control mr-sm-2' required="true" placeholder='ID' style="width:200px;"><p></p>
@@ -25,8 +25,8 @@
          <table name="capture-table" class="table table-sm table-hover table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">name</th>
-                    <th scope="col">brief</th>
+                    <th scope="col" widht="30%">name</th>
+                    <th scope="col" width="70%">brief</th>
                 </tr>
             </thead>
             <tbody>
