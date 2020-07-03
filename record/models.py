@@ -55,6 +55,24 @@ class Phone(models.Model):
     update_date = models.DateTimeField(default=timezone.now)
 
 
+class School(models.Model):
+    name = models.CharField(max_length=100)
+    person = models.ForeignKey(Person, on_delete=models.PROTECT)
+    address = models.CharField(max_length=1000, blank=True, null=True)
+    primary_use = models.BooleanField(default=False)
+    create_date = models.DateTimeField(default=timezone.now)
+    update_date = models.DateTimeField(default=timezone.now)
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=100)
+    person = models.ForeignKey(Person, on_delete=models.PROTECT)
+    address = models.CharField(max_length=1000, blank=True, null=True)
+    primary_use = models.BooleanField(default=False)
+    create_date = models.DateTimeField(default=timezone.now)
+    update_date = models.DateTimeField(default=timezone.now)
+
+
 class QNum(models.Model):
     num = models.CharField(max_length=20)
     person = models.ForeignKey(Person, on_delete=models.PROTECT)
