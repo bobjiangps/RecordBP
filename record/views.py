@@ -15,8 +15,14 @@ def person_list_page(request):
     request.session['validate_error'] = False
     port = request.META.get("SERVER_PORT")
     if request.method == 'GET':
-        record_visit(request, page_suffix=f"/port={port}")
-        return render(request, 'record/identify.html')
+        user = request.user
+        if user.is_authenticated:
+            record_visit(request, page_suffix=f"/login=true&port={port}")
+            person = Person.objects.filter(update_date__lte=timezone.now()).order_by('update_date').reverse()
+            return pagination(request, person)
+        else:
+            record_visit(request, page_suffix=f"/login=false&port={port}")
+            return render(request, 'record/identify.html')
     elif request.method == 'POST':
         id_num = request.POST["id-number"]
         if id_num in allow_list:
@@ -106,8 +112,36 @@ def person_detail_page(request, person_id):
     request.session['validate_error'] = False
     port = request.META.get("SERVER_PORT")
     if request.method == 'GET':
-        record_visit(request, page_suffix=f"/port={port}")
-        return render(request, 'record/identify_detail.html', {"person_id": person_id})
+        user = request.user
+        if user.is_authenticated:
+            record_visit(request, page_suffix=f"/login=true&port={port}")
+            person = get_object_or_404(Person, pk=person_id)
+            alias_name = AliasName.objects.filter(person=person_id)
+            career = Career.objects.filter(person=person_id)
+            address = Address.objects.filter(person=person_id)
+            phone = Phone.objects.filter(person=person_id)
+            school = School.objects.filter(person=person_id)
+            company = Company.objects.filter(person=person_id)
+            qq = QNum.objects.filter(person=person_id)
+            wechat = WeChat.objects.filter(person=person_id)
+            alipay = AliPay.objects.filter(person=person_id)
+            weibo = WeiBo.objects.filter(person=person_id)
+            email = Email.objects.filter(person=person_id)
+            return render(request, 'record/person_detail.html', {'person': person,
+                                                                 'alias_name': alias_name,
+                                                                 'career': career,
+                                                                 'address': address,
+                                                                 'phone': phone,
+                                                                 'school': school,
+                                                                 'company': company,
+                                                                 'qq': qq,
+                                                                 'wechat': wechat,
+                                                                 'alipay': alipay,
+                                                                 'weibo': weibo,
+                                                                 'email': email})
+        else:
+            record_visit(request, page_suffix=f"/login=false&port={port}")
+            return render(request, 'record/identify_detail.html', {"person_id": person_id})
     elif request.method == 'POST':
         id_num = request.POST["id-number"]
         if id_num in allow_list:
@@ -174,7 +208,8 @@ def do_login(request):
         if user is not None:
             if user.is_active:
                 d_login(request, user)
-                return redirect(request.session['login_from'])  # go back to page before login
+                # return redirect(request.session['login_from'])  # go back to page before login
+                return redirect(reverse("person_list"))
             else:
                 request.session['login_error'] = "未激活用户"
                 return render(request,'record/login.html', {'username': userName,'password': userPassword})
