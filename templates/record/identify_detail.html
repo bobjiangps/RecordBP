@@ -5,7 +5,7 @@
     <div class="col-md-4"></div>
     <div class="col-md-4">
         <div class="search-container" style="margin: 0px 20px; padding: 10px;">
-            <form action="{% url 'person_list' %}" method="post">
+            <form action="{% url 'person_detail' person_id %}" method="post">
                 {% csrf_token %}
             <label for="identification">Identity：</label><br>
             <input id="identification" type="text" name="id-number" value="{{ identification }}" class='form-control mr-sm-2' required="true" placeholder='ID' style="width:200px;"><p></p>

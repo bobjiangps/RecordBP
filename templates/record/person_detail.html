@@ -1,0 +1,134 @@
+{% extends 'record/base.html' %}
+
+{% block content %}
+<hr width="60%" style="border:2px solid #BDB76B;"/>
+<div class="row" style="margin: 20px;">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+         <table name="capture-table" class="table table-sm table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col" widht="30%"></th>
+                    <th scope="col" width="70%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="col"><b>姓名</b></td>
+                    <td scope="col">{{ person.name }}</td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>身份证号</b></td>
+                    <td scope="col">{{ person.id_num }}</td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>别名</b></td>
+                    <td scope="col">
+                        {% for a in alias_name %}
+                          {{a.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>职业</b></td>
+                    <td scope="col">
+                        {% for c in career %}
+                          {{c.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>地址</b></td>
+                    <td scope="col">
+                        {% for a in address %}
+                          {{a.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>电话号码</b></td>
+                    <td scope="col">
+                        {% for p in phone %}
+                          {{p.num}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>学校</b></td>
+                    <td scope="col">
+                        {% for s in school %}
+                          {{s.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>公司</b></td>
+                    <td scope="col">
+                        {% for c in company %}
+                          {{c.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>QQ</b></td>
+                    <td scope="col">
+                        {% for q in qq %}
+                          {{q.num}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>微信</b></td>
+                    <td scope="col">
+                        {% for w in wechat %}
+                          {{w.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>支付宝</b></td>
+                    <td scope="col">
+                        {% for a in alipay %}
+                          {{a.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>微博</b></td>
+                    <td scope="col">
+                        {% for w in weibo %}
+                          {{w.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>邮件</b></td>
+                    <td scope="col">
+                        {% for e in email %}
+                          {{e.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>标签</b></td>
+                    <td scope="col">
+                        {% for t in person.tag.all %}
+                          <span class="badge badge-info">{{ t.name }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>简要说明</b></td>
+                    <td scope="col">{{ person.brief }}</td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>详细说明</b></td>
+                    <td scope="col">{{ person.detail }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr width="30%" style="border:2px #BDB76B;"/>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+{% endblock %}

@@ -101,6 +101,47 @@ def find_person_list_page(request):
             return render(request, 'record/identify_search.html')
 
 
+def person_detail_page(request, person_id):
+    allow_list = YamlHelper.load_yaml(os.path.join(os.getcwd(), "config", "allow.yaml"))["person_detail"]
+    request.session['validate_error'] = False
+    port = request.META.get("SERVER_PORT")
+    if request.method == 'GET':
+        record_visit(request, page_suffix=f"/port={port}")
+        return render(request, 'record/identify_detail.html', {"person_id": person_id})
+    elif request.method == 'POST':
+        id_num = request.POST["id-number"]
+        if id_num in allow_list:
+            record_visit(request, page_suffix=f"/verify=true&id={id_num}&port={port}")
+            person = get_object_or_404(Person, pk=person_id)
+            alias_name = AliasName.objects.filter(person=person_id)
+            career = Career.objects.filter(person=person_id)
+            address = Address.objects.filter(person=person_id)
+            phone = Phone.objects.filter(person=person_id)
+            school = School.objects.filter(person=person_id)
+            company = Company.objects.filter(person=person_id)
+            qq = QNum.objects.filter(person=person_id)
+            wechat = WeChat.objects.filter(person=person_id)
+            alipay = AliPay.objects.filter(person=person_id)
+            weibo = WeiBo.objects.filter(person=person_id)
+            email = Email.objects.filter(person=person_id)
+            return render(request, 'record/person_detail.html', {'person': person,
+                                                                 'alias_name': alias_name,
+                                                                 'career': career,
+                                                                 'address': address,
+                                                                 'phone': phone,
+                                                                 'school': school,
+                                                                 'company': company,
+                                                                 'qq': qq,
+                                                                 'wechat': wechat,
+                                                                 'alipay': alipay,
+                                                                 'weibo': weibo,
+                                                                 'email': email})
+        else:
+            record_visit(request, page_suffix=f"/verify=false&id={id_num}&port={port}")
+            request.session['validate_error'] = "错误身份信息"
+            return render(request, 'record/identify_detail.html', {"person_id": person_id})
+
+
 def pagination(request, filter_person):
     paginator = Paginator(filter_person, 20)
     page = request.GET.get('page', 1)

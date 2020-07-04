@@ -8,15 +8,21 @@
          <table name="capture-table" class="table table-sm table-hover table-bordered">
             <thead>
                 <tr>
-                    <th scope="col" widht="30%">name</th>
-                    <th scope="col" width="70%">brief</th>
+                    <th scope="col" widht="20%">姓名</th>
+                    <th scope="col" width="60%">简要说明</th>
+                    <th scope="col" width="20%">标签</th>
                 </tr>
             </thead>
             <tbody>
                 {% for bp in person %}
                 <tr>
-                    <td scope="col">{{ bp.name }}</td>
+                    <td scope="col"><a href="{% url 'person_detail' bp.id %}">{{ bp.name }}</td>
                     <td scope="col">{{ bp.brief }}</td>
+                    <td scope="col">
+                        {% for t in bp.tag.all %}
+                          <span class="badge badge-info">{{ t.name }}</span>
+                        {% endfor %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
