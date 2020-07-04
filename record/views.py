@@ -2,28 +2,30 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from utils.geoip_helper import GeoIpHelper
+from utils.yaml_helper import YamlHelper
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Visitor, Person
 from django.contrib.auth import authenticate, login as d_login, logout as d_logout
+import os
 
 
 def person_list_page(request):
-    allowed_id = ["ProtectAnimal"]
+    allow_list = YamlHelper.load_yaml(os.path.join(os.getcwd(), "config", "allow.yaml"))["person_list"]
     request.session['validate_error'] = False
     port = request.META.get("SERVER_PORT")
     if request.method == 'GET':
         record_visit(request, page_suffix=f"/port={port}")
-        return render(request, 'record/person_list.html')
+        return render(request, 'record/identify.html')
     elif request.method == 'POST':
         id_num = request.POST["id-number"]
-        if id_num in allowed_id:
+        if id_num in allow_list:
             record_visit(request, page_suffix=f"/verify=true&id={id_num}&port={port}")
             person = Person.objects.filter(update_date__lte=timezone.now()).order_by('update_date').reverse()
             return pagination(request, person)
         else:
             record_visit(request, page_suffix=f"/verify=false&id={id_num}&port={port}")
             request.session['validate_error'] = "错误身份信息"
-            return render(request, 'record/person_list.html')
+            return render(request, 'record/identify.html')
 
 
 def pagination(request, filter_person):
@@ -68,9 +70,10 @@ def do_login(request):
 
 
 def do_logout(request):
-    record_visit(request)
+    port = request.META.get("SERVER_PORT")
+    record_visit(request, page_suffix=f"/port={port}")
     d_logout(request)
-    return redirect(reverse('post_list'))
+    return redirect(reverse('person_list'))
 
 
 def record_visit(request, page_suffix=""):
