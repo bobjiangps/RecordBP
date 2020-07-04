@@ -17,7 +17,7 @@
                 {% for bp in person %}
                 <tr>
                     <td scope="col"><a href="{% url 'person_detail' bp.id %}">{{ bp.name }}</td>
-                    <td scope="col">{{ bp.brief }}</td>
+                    <td scope="col">{{ bp.brief|safe }}</td>
                     <td scope="col">
                         {% for t in bp.tag.all %}
                           <span class="badge badge-info">{{ t.name }}</span>

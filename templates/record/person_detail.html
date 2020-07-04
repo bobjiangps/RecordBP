@@ -119,11 +119,11 @@
                 </tr>
                 <tr>
                     <td scope="col"><b>简要说明</b></td>
-                    <td scope="col">{{ person.brief }}</td>
+                    <td scope="col">{{ person.brief|safe }}</td>
                 </tr>
                 <tr>
                     <td scope="col"><b>详细说明</b></td>
-                    <td scope="col">{{ person.detail }}</td>
+                    <td scope="col">{{ person.detail|safe }}</td>
                 </tr>
             </tbody>
         </table>

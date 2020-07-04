@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Tag(models.Model):
@@ -20,7 +21,8 @@ class Person(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICE, default=GENDER_CHOICE[0], verbose_name="性别")
     id_num = models.CharField(max_length=20, blank=True, null=True, verbose_name="身份证号")
     brief = models.CharField(max_length=1000, verbose_name="简要说明")
-    detail = models.CharField(max_length=10000, verbose_name="详细说明")
+    # detail = models.CharField(max_length=10000, verbose_name="详细说明")
+    detail = RichTextUploadingField()
     tag = models.ManyToManyField(Tag, blank=True, verbose_name="标签")
     visible = models.BooleanField(default=True, verbose_name="是否可见")
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
