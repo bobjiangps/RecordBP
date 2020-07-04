@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Tag, AliasName, Career, Address, Phone, QNum, WeChat, AliPay, WeiBo, Email, Person
+from .models import Tag, AliasName, Career, Address, Phone, QNum, WeChat, AliPay, WeiBo, Email, Person, School, Company
 
 admin.site.register(Tag)
 admin.site.register(Person)
@@ -12,3 +12,5 @@ admin.site.register(WeChat)
 admin.site.register(WeiBo)
 admin.site.register(AliPay)
 admin.site.register(Email)
+admin.site.register(School)
+admin.site.register(Company)

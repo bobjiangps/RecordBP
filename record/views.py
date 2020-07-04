@@ -5,6 +5,7 @@ from utils.geoip_helper import GeoIpHelper
 from utils.yaml_helper import YamlHelper
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Visitor, Person
+from .models import AliasName, Career, Address, Phone, QNum, WeChat, AliPay, WeiBo, Email, School, Company
 from django.contrib.auth import authenticate, login as d_login, logout as d_logout
 import os
 
@@ -26,6 +27,78 @@ def person_list_page(request):
             record_visit(request, page_suffix=f"/verify=false&id={id_num}&port={port}")
             request.session['validate_error'] = "错误身份信息"
             return render(request, 'record/identify.html')
+
+
+def find_person_list_page(request):
+    allow_list = YamlHelper.load_yaml(os.path.join(os.getcwd(), "config", "allow.yaml"))["person_list"]
+    request.session['validate_error'] = False
+    port = request.META.get("SERVER_PORT")
+    if request.method == 'GET':
+        record_visit(request, page_suffix=f"/port={port}")
+        return render(request, 'record/identify_search.html')
+    elif request.method == 'POST':
+        id_num = request.POST["id-number"]
+        keyword = request.POST["key-word"]
+        if id_num in allow_list:
+            record_visit(request, page_suffix=f"/verify=true&id={id_num}&port={port}")
+            # person = Person.objects.filter(update_date__lte=timezone.now()).order_by('update_date').reverse()
+            by_person_name = Person.objects.filter(name__contains=keyword)
+            by_person_idnum = Person.objects.filter(id_num__contains=keyword)
+            by_person_brief = Person.objects.filter(brief__contains=keyword)
+            by_person_detail = Person.objects.filter(detail__contains=keyword)
+
+            foreign_key_ids = []
+            by_alias_name = AliasName.objects.filter(name__contains=keyword)
+            if by_alias_name:
+                for o in by_alias_name:
+                    foreign_key_ids.append(o.person.id)
+            by_career_name = Career.objects.filter(name__contains=keyword)
+            if by_career_name:
+                for o in by_career_name:
+                    foreign_key_ids.append(o.person.id)
+            by_address_name = Address.objects.filter(name__contains=keyword)
+            if by_address_name:
+                for o in by_address_name:
+                    foreign_key_ids.append(o.person.id)
+            by_phone_num = Phone.objects.filter(num__contains=keyword)
+            if by_phone_num:
+                for o in by_phone_num:
+                    foreign_key_ids.append(o.person.id)
+            by_school_name = School.objects.filter(name__contains=keyword)
+            if by_school_name:
+                for o in by_school_name:
+                    foreign_key_ids.append(o.person.id)
+            by_company_name = Company.objects.filter(name__contains=keyword)
+            if by_company_name:
+                for o in by_company_name:
+                    foreign_key_ids.append(o.person.id)
+            by_qq_num = QNum.objects.filter(num__contains=keyword)
+            if by_qq_num:
+                for o in by_qq_num:
+                    foreign_key_ids.append(o.person.id)
+            by_wechat_name = WeChat.objects.filter(name__contains=keyword)
+            if by_wechat_name:
+                for o in by_wechat_name:
+                    foreign_key_ids.append(o.person.id)
+            by_alipay_name = AliPay.objects.filter(name__contains=keyword)
+            if by_alipay_name:
+                for o in by_alipay_name:
+                    foreign_key_ids.append(o.person.id)
+            by_weibo_name = WeiBo.objects.filter(name__contains=keyword)
+            if by_weibo_name:
+                for o in by_weibo_name:
+                    foreign_key_ids.append(o.person.id)
+            by_email_name = Email.objects.filter(name__contains=keyword)
+            if by_email_name:
+                for o in by_email_name:
+                    foreign_key_ids.append(o.person.id)
+            person_foreign = Person.objects.filter(id__in=foreign_key_ids)
+            person = by_person_name | by_person_idnum | by_person_brief | by_person_detail | person_foreign
+            return pagination(request, person)
+        else:
+            record_visit(request, page_suffix=f"/verify=false&id={id_num}&port={port}")
+            request.session['validate_error'] = "错误身份信息"
+            return render(request, 'record/identify_search.html')
 
 
 def pagination(request, filter_person):

@@ -13,12 +13,12 @@
                 </tr>
             </thead>
             <tbody>
+                {% for bp in person %}
                 <tr>
-                    {% for bp in person %}
                     <td scope="col">{{ bp.name }}</td>
                     <td scope="col">{{ bp.brief }}</td>
-                    {% endfor %}
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
         <hr width="30%" style="border:2px #BDB76B;"/>
