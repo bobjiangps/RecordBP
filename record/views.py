@@ -43,9 +43,13 @@ def find_person_list_page(request):
         record_visit(request, page_suffix=f"/port={port}")
         return render(request, 'record/identify_search.html')
     elif request.method == 'POST':
-        id_num = request.POST["id-number"]
+        user = request.user
+        if user.is_authenticated:
+            id_num = None
+        else:
+            id_num = request.POST["id-number"]
         keyword = request.POST["key-word"]
-        if id_num in allow_list:
+        if id_num in allow_list or user.is_authenticated:
             record_visit(request, page_suffix=f"/verify=true&id={id_num}&port={port}")
             # person = Person.objects.filter(update_date__lte=timezone.now()).order_by('update_date').reverse()
             by_person_name = Person.objects.filter(name__contains=keyword)
