@@ -1,0 +1,30 @@
+{% extends 'record/base.html' %}
+
+{% load highlight %}
+
+{% block content %}
+<hr width="60%" style="border:2px solid #BDB76B;"/>
+<div class="row" style="margin: 20px;">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+         <table name="capture-table" class="table table-sm table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col" widht="30%">name</th>
+                    <th scope="col" width="70%">brief</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for bp in person %}
+                    <td scope="col">{{ bp.name }}</td>
+                    <td scope="col">{{ bp.brief }}</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+        <hr width="30%" style="border:2px #BDB76B;"/>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+{% endblock %}

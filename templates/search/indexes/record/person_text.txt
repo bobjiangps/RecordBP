@@ -1,0 +1,4 @@
+{{ object.name }}
+{{ object.id_num }}
+{{ object.brief }}
+{{ object.detail }}
