@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.utils import timezone
 from utils.geoip_helper import GeoIpHelper
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Visitor, Person
+from django.contrib.auth import authenticate, login as d_login, logout as d_logout
 
 
 def person_list_page(request):
@@ -36,6 +38,39 @@ def pagination(request, filter_person):
         # if page is out of range, deliver last page of results
         part_person = paginator.page(paginator.num_pages)
     return render(request, 'record/person_list.html', {'person': part_person})
+
+
+def do_login(request):
+    port = request.META.get("SERVER_PORT")
+    record_visit(request, page_suffix=f"/port={port}")
+    if request.method == 'GET':
+        request.session['login_from'] = request.META.get('HTTP_REFERER', '/')
+        request.session['login_error'] = False
+        user = request.user
+        if user.is_authenticated:
+            return redirect(reverse("person_list"))
+        else:
+            return render(request, 'record/login.html')
+    elif request.method == "POST":
+        userName = request.POST['user-name']
+        userPassword = request.POST['user-pw']
+        user = authenticate(username=userName, password=userPassword)
+        if user is not None:
+            if user.is_active:
+                d_login(request, user)
+                return redirect(request.session['login_from'])  # go back to page before login
+            else:
+                request.session['login_error'] = "未激活用户"
+                return render(request,'record/login.html', {'username': userName,'password': userPassword})
+        else:
+            request.session['login_error'] = "错误的用户名或密码"
+            return render(request,'record/login.html', {'username': userName,'password': userPassword})
+
+
+def do_logout(request):
+    record_visit(request)
+    d_logout(request)
+    return redirect(reverse('post_list'))
 
 
 def record_visit(request, page_suffix=""):
