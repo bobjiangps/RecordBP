@@ -8,6 +8,9 @@ class Tag(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = "标签"
 
@@ -41,6 +44,9 @@ class AliasName(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = "别名"
 
@@ -51,6 +57,9 @@ class Career(models.Model):
     primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name_plural = "职业"
@@ -63,6 +72,9 @@ class Address(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = "地址"
 
@@ -73,6 +85,9 @@ class Phone(models.Model):
     primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.num
 
     class Meta:
         verbose_name_plural = "电话号码"
@@ -86,6 +101,9 @@ class School(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = "学校"
 
@@ -98,6 +116,9 @@ class Company(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = "公司"
 
@@ -108,6 +129,9 @@ class QNum(models.Model):
     primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.num
 
     class Meta:
         verbose_name_plural = "QQ"
@@ -120,6 +144,9 @@ class WeChat(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = "微信"
 
@@ -130,6 +157,9 @@ class AliPay(models.Model):
     primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name_plural = "支付宝"
@@ -142,6 +172,9 @@ class WeiBo(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = "微博"
 
@@ -152,6 +185,9 @@ class Email(models.Model):
     primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name_plural = "邮件"
