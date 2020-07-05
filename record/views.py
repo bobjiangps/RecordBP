@@ -5,7 +5,7 @@ from utils.geoip_helper import GeoIpHelper
 from utils.yaml_helper import YamlHelper
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Visitor, Person
-from .models import AliasName, Career, Address, Phone, QNum, WeChat, AliPay, WeiBo, Email, School, Company
+from .models import AliasName, Career, Address, Phone, QNum, WeChat, AliPay, WeiBo, Email, School, Company, Douyin, Xianyu
 from django.contrib.auth import authenticate, login as d_login, logout as d_logout
 import os
 
@@ -102,6 +102,14 @@ def find_person_list_page(request):
             if by_email_name:
                 for o in by_email_name:
                     foreign_key_ids.append(o.person.id)
+            by_douyin_name = Douyin.objects.filter(name__contains=keyword)
+            if by_douyin_name:
+                for d in by_douyin_name:
+                    foreign_key_ids.append(d.person.id)
+            by_xianyu_name = Xianyu.objects.filter(name__contains=keyword)
+            if by_xianyu_name:
+                for x in by_xianyu_name:
+                    foreign_key_ids.append(x.person.id)
             person_foreign = Person.objects.filter(id__in=foreign_key_ids)
             person = by_person_name | by_person_idnum | by_person_brief | by_person_detail | person_foreign
             return pagination(request, person)
@@ -131,6 +139,8 @@ def person_detail_page(request, person_id):
             alipay = AliPay.objects.filter(person=person_id)
             weibo = WeiBo.objects.filter(person=person_id)
             email = Email.objects.filter(person=person_id)
+            douyin = Douyin.objects.filter(person=person_id)
+            xianyu = Xianyu.objects.filter(person=person_id)
             return render(request, 'record/person_detail.html', {'person': person,
                                                                  'alias_name': alias_name,
                                                                  'career': career,
@@ -142,7 +152,9 @@ def person_detail_page(request, person_id):
                                                                  'wechat': wechat,
                                                                  'alipay': alipay,
                                                                  'weibo': weibo,
-                                                                 'email': email})
+                                                                 'email': email,
+                                                                 'douyin': douyin,
+                                                                 'xianyu': xianyu})
         else:
             record_visit(request, page_suffix=f"/login=false&port={port}")
             return render(request, 'record/identify_detail.html', {"person_id": person_id})

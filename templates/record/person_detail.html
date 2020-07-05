@@ -110,6 +110,22 @@
                     </td>
                 </tr>
                 <tr>
+                    <td scope="col"><b>抖音</b></td>
+                    <td scope="col">
+                        {% for d in douyin %}
+                          {{d.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>闲鱼</b></td>
+                    <td scope="col">
+                        {% for x in xianyu %}
+                          {{x.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
                     <td scope="col"><b>标签</b></td>
                     <td scope="col">
                         {% for t in person.tag.all %}

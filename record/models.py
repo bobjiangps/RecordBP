@@ -193,6 +193,34 @@ class Email(models.Model):
         verbose_name_plural = "邮件"
 
 
+class Douyin(models.Model):
+    name = models.CharField(max_length=100, verbose_name="抖音")
+    person = models.ForeignKey(Person, on_delete=models.PROTECT, verbose_name="人员")
+    primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
+    create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
+    update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "抖音"
+
+
+class Xianyu(models.Model):
+    name = models.CharField(max_length=100, verbose_name="闲鱼")
+    person = models.ForeignKey(Person, on_delete=models.PROTECT, verbose_name="人员")
+    primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
+    create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
+    update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "闲鱼"
+
+
 class Visitor(models.Model):
     ip = models.CharField(max_length=30)
     region = models.CharField(max_length=1000, blank=True, null=True)
