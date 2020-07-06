@@ -162,12 +162,13 @@ CKEDITOR_CONFIGS = {
                     ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
                     ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
                     ['Link', 'Unlink', 'Anchor'],
-                    ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                    ['Image', 'Html5video', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
                     ['Styles', 'Format', 'Font', 'FontSize'],
                     ['TextColor', 'BGColor'],
 
                     ),
-        'extraPlugins': 'codesnippet',
+        # 'extraPlugins': 'codesnippet',
+        'extraPlugins': ','.join(['codesnippet', 'html5video', ]),
     }
 }
 
