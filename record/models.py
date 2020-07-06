@@ -208,7 +208,7 @@ class Douyin(models.Model):
 
 
 class Xianyu(models.Model):
-    name = models.CharField(max_length=100, verbose_name="闲鱼")
+    name = models.CharField(max_length=100, verbose_name="闲鱼/淘宝/旺旺")
     person = models.ForeignKey(Person, on_delete=models.PROTECT, verbose_name="人员")
     primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
@@ -218,7 +218,35 @@ class Xianyu(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "闲鱼"
+        verbose_name_plural = "闲鱼淘宝旺旺"
+
+
+class Baidu(models.Model):
+    name = models.CharField(max_length=100, verbose_name="百度")
+    person = models.ForeignKey(Person, on_delete=models.PROTECT, verbose_name="人员")
+    primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
+    create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
+    update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "百度"
+
+
+class OtherAccount(models.Model):
+    name = models.CharField(max_length=100, verbose_name="其他账号")
+    person = models.ForeignKey(Person, on_delete=models.PROTECT, verbose_name="人员")
+    primary_use = models.BooleanField(default=False, verbose_name="是否主要使用")
+    create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
+    update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "其他账号"
 
 
 class Visitor(models.Model):

@@ -5,7 +5,7 @@ from utils.geoip_helper import GeoIpHelper
 from utils.yaml_helper import YamlHelper
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Visitor, Person
-from .models import AliasName, Career, Address, Phone, QNum, WeChat, AliPay, WeiBo, Email, School, Company, Douyin, Xianyu
+from .models import AliasName, Career, Address, Phone, QNum, WeChat, AliPay, WeiBo, Email, School, Company, Douyin, Xianyu, Baidu, OtherAccount
 from django.contrib.auth import authenticate, login as d_login, logout as d_logout
 import os
 
@@ -110,6 +110,14 @@ def find_person_list_page(request):
             if by_xianyu_name:
                 for x in by_xianyu_name:
                     foreign_key_ids.append(x.person.id)
+            by_baidu_name = Baidu.objects.filter(name__contains=keyword)
+            if by_baidu_name:
+                for b in by_baidu_name:
+                    foreign_key_ids.append(b.person.id)
+            by_other_account_name = OtherAccount.objects.filter(name__contains=keyword)
+            if by_other_account_name:
+                for oa in by_other_account_name:
+                    foreign_key_ids.append(oa.person.id)
             person_foreign = Person.objects.filter(id__in=foreign_key_ids)
             person = by_person_name | by_person_idnum | by_person_brief | by_person_detail | person_foreign
             return pagination(request, person)
@@ -141,6 +149,8 @@ def person_detail_page(request, person_id):
             email = Email.objects.filter(person=person_id)
             douyin = Douyin.objects.filter(person=person_id)
             xianyu = Xianyu.objects.filter(person=person_id)
+            baidu = Baidu.objects.filter(person=person_id)
+            other_account = OtherAccount.objects.filter(person=person_id)
             return render(request, 'record/person_detail.html', {'person': person,
                                                                  'alias_name': alias_name,
                                                                  'career': career,
@@ -154,7 +164,9 @@ def person_detail_page(request, person_id):
                                                                  'weibo': weibo,
                                                                  'email': email,
                                                                  'douyin': douyin,
-                                                                 'xianyu': xianyu})
+                                                                 'xianyu': xianyu,
+                                                                 'baidu': baidu,
+                                                                 'other_account': other_account})
         else:
             record_visit(request, page_suffix=f"/login=false&port={port}")
             return render(request, 'record/identify_detail.html', {"person_id": person_id})

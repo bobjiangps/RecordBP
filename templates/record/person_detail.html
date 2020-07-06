@@ -118,10 +118,26 @@
                     </td>
                 </tr>
                 <tr>
-                    <td scope="col"><b>闲鱼</b></td>
+                    <td scope="col"><b>闲鱼/淘宝/旺旺</b></td>
                     <td scope="col">
                         {% for x in xianyu %}
                           {{x.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>百度</b></td>
+                    <td scope="col">
+                        {% for b in baidu %}
+                          {{b.name}} ; </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="col"><b>其他账户</b></td>
+                    <td scope="col">
+                        {% for oa in other_account %}
+                          {{oa.name}} ; </br>
                         {% endfor %}
                     </td>
                 </tr>
