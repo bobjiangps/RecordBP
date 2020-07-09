@@ -22,6 +22,7 @@ class Person(models.Model):
     )
     name = models.CharField(max_length=100, verbose_name="姓名")
     gender = models.CharField(max_length=10, choices=GENDER_CHOICE, default=GENDER_CHOICE[0], verbose_name="性别")
+    dob = models.DateField(blank=True, null=True, verbose_name="出生日期")
     id_num = models.CharField(max_length=20, blank=True, null=True, verbose_name="身份证号")
     brief = models.CharField(max_length=1000, verbose_name="简要说明")
     # detail = models.CharField(max_length=10000, verbose_name="详细说明")

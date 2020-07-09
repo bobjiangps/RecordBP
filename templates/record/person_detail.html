@@ -19,6 +19,18 @@
                     <td scope="col">{{ person.name }}</td>
                 </tr>
                 <tr>
+                    <td scope="col"><b>性别</b></td>
+                    {% if person.gender == 'M' %}
+                    <td scope="col">男</td>
+                    {% elif person.gender == 'F' %}
+                    <td scope="col">女</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td scope="col"><b>出生日期</b></td>
+                    <td scope="col">{{ person.dob }}</td>
+                </tr>
+                <tr>
                     <td scope="col"><b>身份证号</b></td>
                     <td scope="col">{{ person.id_num }}</td>
                 </tr>
