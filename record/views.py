@@ -186,6 +186,10 @@ def person_detail_page(request, person_id):
             alipay = AliPay.objects.filter(person=person_id)
             weibo = WeiBo.objects.filter(person=person_id)
             email = Email.objects.filter(person=person_id)
+            douyin = Douyin.objects.filter(person=person_id)
+            xianyu = Xianyu.objects.filter(person=person_id)
+            baidu = Baidu.objects.filter(person=person_id)
+            other_account = OtherAccount.objects.filter(person=person_id)
             return render(request, 'record/person_detail.html', {'person': person,
                                                                  'alias_name': alias_name,
                                                                  'career': career,
@@ -197,7 +201,11 @@ def person_detail_page(request, person_id):
                                                                  'wechat': wechat,
                                                                  'alipay': alipay,
                                                                  'weibo': weibo,
-                                                                 'email': email})
+                                                                 'email': email,
+                                                                 'douyin': douyin,
+                                                                 'xianyu': xianyu,
+                                                                 'baidu': baidu,
+                                                                 'other_account': other_account})
         else:
             record_visit(request, page_suffix=f"/verify=false&id={id_num}&port={port}")
             request.session['validate_error'] = "错误身份信息"
