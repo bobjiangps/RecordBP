@@ -53,7 +53,7 @@ def find_person_list_page(request):
             id_num = request.POST["id-number"]
         keyword = request.POST["key-word"]
         if id_num in allow_list or user.is_authenticated:
-            record_visit(request, page_suffix=f"/verify=true&id={id_num}&port={port}")
+            record_visit(request, page_suffix=f"/verify=true&id={id_num}&keyword={keyword}&port={port}")
             # person = Person.objects.filter(update_date__lte=timezone.now()).order_by('update_date').reverse()
             by_person_name = Person.objects.filter(name__contains=keyword)
             by_person_idnum = Person.objects.filter(id_num__contains=keyword)
@@ -125,7 +125,7 @@ def find_person_list_page(request):
             person = by_person_name | by_person_idnum | by_person_brief | by_person_detail | person_foreign
             return pagination(request, person)
         else:
-            record_visit(request, page_suffix=f"/verify=false&id={id_num}&port={port}")
+            record_visit(request, page_suffix=f"/verify=false&id={id_num}&keyword={keyword}&port={port}")
             request.session['validate_error'] = "错误身份信息"
             return render(request, 'record/identify_search.html')
 
