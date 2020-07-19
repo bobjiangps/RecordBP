@@ -39,11 +39,14 @@ def find_person_list_page(request):
     allow_list = YamlHelper.load_yaml(os.path.join(os.getcwd(), "config", "allow.yaml"))["person_list"]
     request.session['validate_error'] = False
     port = request.META.get("SERVER_PORT")
+    user = request.user
     if request.method == 'GET':
-        record_visit(request, page_suffix=f"/port={port}")
+        if user.is_authenticated:
+            record_visit(request, page_suffix=f"/login=true&port={port}")
+        else:
+            record_visit(request, page_suffix=f"/login=false&port={port}")
         return render(request, 'record/identify_search.html')
     elif request.method == 'POST':
-        user = request.user
         if user.is_authenticated:
             id_num = None
         else:
