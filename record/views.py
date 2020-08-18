@@ -9,6 +9,7 @@ from .models import AliasName, Career, Address, Phone, QNum, WeChat, AliPay, Wei
 from django.contrib.auth import authenticate, login as d_login, logout as d_logout
 import os
 
+searched_person = None
 
 def person_list_page(request):
     allow_list = YamlHelper.load_yaml(os.path.join(os.getcwd(), "config", "allow.yaml"))["person_list"]
@@ -40,12 +41,22 @@ def find_person_list_page(request):
     request.session['validate_error'] = False
     port = request.META.get("SERVER_PORT")
     user = request.user
+    global searched_person
     if request.method == 'GET':
         if user.is_authenticated:
             record_visit(request, page_suffix=f"/login=true&port={port}")
+            # if searched_person or request.get_full_path().find("?page=") > 0:
+            if request.get_full_path().find("?page=") > 0:
+                if searched_person:
+                    return pagination(request, searched_person, num=100)
+                else:
+                    return render(request, 'record/identify_search.html')
+            else:
+                searched_person = None
+                return render(request, 'record/identify_search.html')
         else:
             record_visit(request, page_suffix=f"/login=false&port={port}")
-        return render(request, 'record/identify_search.html')
+            return render(request, 'record/identify_search.html')
     elif request.method == 'POST':
         if user.is_authenticated:
             id_num = None
@@ -55,79 +66,84 @@ def find_person_list_page(request):
         if id_num in allow_list or user.is_authenticated:
             record_visit(request, page_suffix=f"/verify=true&id={id_num}&keyword={keyword}&port={port}")
             # person = Person.objects.filter(update_date__lte=timezone.now()).order_by('update_date').reverse()
-            by_person_name = Person.objects.filter(name__contains=keyword)
-            by_person_idnum = Person.objects.filter(id_num__contains=keyword)
-            by_person_brief = Person.objects.filter(brief__contains=keyword)
-            by_person_detail = Person.objects.filter(detail__contains=keyword)
-
-            foreign_key_ids = []
-            by_alias_name = AliasName.objects.filter(name__contains=keyword)
-            if by_alias_name:
-                for o in by_alias_name:
-                    foreign_key_ids.append(o.person.id)
-            by_career_name = Career.objects.filter(name__contains=keyword)
-            if by_career_name:
-                for o in by_career_name:
-                    foreign_key_ids.append(o.person.id)
-            by_address_name = Address.objects.filter(name__contains=keyword)
-            if by_address_name:
-                for o in by_address_name:
-                    foreign_key_ids.append(o.person.id)
-            by_phone_num = Phone.objects.filter(num__contains=keyword)
-            if by_phone_num:
-                for o in by_phone_num:
-                    foreign_key_ids.append(o.person.id)
-            by_school_name = School.objects.filter(name__contains=keyword)
-            if by_school_name:
-                for o in by_school_name:
-                    foreign_key_ids.append(o.person.id)
-            by_company_name = Company.objects.filter(name__contains=keyword)
-            if by_company_name:
-                for o in by_company_name:
-                    foreign_key_ids.append(o.person.id)
-            by_qq_num = QNum.objects.filter(num__contains=keyword)
-            if by_qq_num:
-                for o in by_qq_num:
-                    foreign_key_ids.append(o.person.id)
-            by_wechat_name = WeChat.objects.filter(name__contains=keyword)
-            if by_wechat_name:
-                for o in by_wechat_name:
-                    foreign_key_ids.append(o.person.id)
-            by_alipay_name = AliPay.objects.filter(name__contains=keyword)
-            if by_alipay_name:
-                for o in by_alipay_name:
-                    foreign_key_ids.append(o.person.id)
-            by_weibo_name = WeiBo.objects.filter(name__contains=keyword)
-            if by_weibo_name:
-                for o in by_weibo_name:
-                    foreign_key_ids.append(o.person.id)
-            by_email_name = Email.objects.filter(name__contains=keyword)
-            if by_email_name:
-                for o in by_email_name:
-                    foreign_key_ids.append(o.person.id)
-            by_douyin_name = Douyin.objects.filter(name__contains=keyword)
-            if by_douyin_name:
-                for d in by_douyin_name:
-                    foreign_key_ids.append(d.person.id)
-            by_xianyu_name = Xianyu.objects.filter(name__contains=keyword)
-            if by_xianyu_name:
-                for x in by_xianyu_name:
-                    foreign_key_ids.append(x.person.id)
-            by_baidu_name = Baidu.objects.filter(name__contains=keyword)
-            if by_baidu_name:
-                for b in by_baidu_name:
-                    foreign_key_ids.append(b.person.id)
-            by_other_account_name = OtherAccount.objects.filter(name__contains=keyword)
-            if by_other_account_name:
-                for oa in by_other_account_name:
-                    foreign_key_ids.append(oa.person.id)
-            person_foreign = Person.objects.filter(id__in=foreign_key_ids)
-            person = by_person_name | by_person_idnum | by_person_brief | by_person_detail | person_foreign
-            return pagination(request, person)
+            searched_person = get_person_object_by_keyword(keyword)
+            return pagination(request, searched_person, num=100)
         else:
             record_visit(request, page_suffix=f"/verify=false&id={id_num}&keyword={keyword}&port={port}")
             request.session['validate_error'] = "错误身份信息"
             return render(request, 'record/identify_search.html')
+
+
+def get_person_object_by_keyword(keyword):
+    by_person_name = Person.objects.filter(name__contains=keyword)
+    by_person_idnum = Person.objects.filter(id_num__contains=keyword)
+    by_person_brief = Person.objects.filter(brief__contains=keyword)
+    by_person_detail = Person.objects.filter(detail__contains=keyword)
+
+    foreign_key_ids = []
+    by_alias_name = AliasName.objects.filter(name__contains=keyword)
+    if by_alias_name:
+        for o in by_alias_name:
+            foreign_key_ids.append(o.person.id)
+    by_career_name = Career.objects.filter(name__contains=keyword)
+    if by_career_name:
+        for o in by_career_name:
+            foreign_key_ids.append(o.person.id)
+    by_address_name = Address.objects.filter(name__contains=keyword)
+    if by_address_name:
+        for o in by_address_name:
+            foreign_key_ids.append(o.person.id)
+    by_phone_num = Phone.objects.filter(num__contains=keyword)
+    if by_phone_num:
+        for o in by_phone_num:
+            foreign_key_ids.append(o.person.id)
+    by_school_name = School.objects.filter(name__contains=keyword)
+    if by_school_name:
+        for o in by_school_name:
+            foreign_key_ids.append(o.person.id)
+    by_company_name = Company.objects.filter(name__contains=keyword)
+    if by_company_name:
+        for o in by_company_name:
+            foreign_key_ids.append(o.person.id)
+    by_qq_num = QNum.objects.filter(num__contains=keyword)
+    if by_qq_num:
+        for o in by_qq_num:
+            foreign_key_ids.append(o.person.id)
+    by_wechat_name = WeChat.objects.filter(name__contains=keyword)
+    if by_wechat_name:
+        for o in by_wechat_name:
+            foreign_key_ids.append(o.person.id)
+    by_alipay_name = AliPay.objects.filter(name__contains=keyword)
+    if by_alipay_name:
+        for o in by_alipay_name:
+            foreign_key_ids.append(o.person.id)
+    by_weibo_name = WeiBo.objects.filter(name__contains=keyword)
+    if by_weibo_name:
+        for o in by_weibo_name:
+            foreign_key_ids.append(o.person.id)
+    by_email_name = Email.objects.filter(name__contains=keyword)
+    if by_email_name:
+        for o in by_email_name:
+            foreign_key_ids.append(o.person.id)
+    by_douyin_name = Douyin.objects.filter(name__contains=keyword)
+    if by_douyin_name:
+        for d in by_douyin_name:
+            foreign_key_ids.append(d.person.id)
+    by_xianyu_name = Xianyu.objects.filter(name__contains=keyword)
+    if by_xianyu_name:
+        for x in by_xianyu_name:
+            foreign_key_ids.append(x.person.id)
+    by_baidu_name = Baidu.objects.filter(name__contains=keyword)
+    if by_baidu_name:
+        for b in by_baidu_name:
+            foreign_key_ids.append(b.person.id)
+    by_other_account_name = OtherAccount.objects.filter(name__contains=keyword)
+    if by_other_account_name:
+        for oa in by_other_account_name:
+            foreign_key_ids.append(oa.person.id)
+    person_foreign = Person.objects.filter(id__in=foreign_key_ids)
+    person = by_person_name | by_person_idnum | by_person_brief | by_person_detail | person_foreign
+    return person
 
 
 def person_detail_page(request, person_id):
@@ -215,8 +231,8 @@ def person_detail_page(request, person_id):
             return render(request, 'record/identify_detail.html', {"person_id": person_id})
 
 
-def pagination(request, filter_person):
-    paginator = Paginator(filter_person, 20)
+def pagination(request, filter_person, num=20):
+    paginator = Paginator(filter_person, num)
     page = request.GET.get('page', 1)
     try:
         part_person = paginator.page(page)
