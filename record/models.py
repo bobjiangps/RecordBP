@@ -29,6 +29,7 @@ class Person(models.Model):
     detail = RichTextUploadingField()
     tag = models.ManyToManyField(Tag, blank=True, verbose_name="标签")
     visible = models.BooleanField(default=True, verbose_name="是否可见")
+    expose = models.BooleanField(default=False, verbose_name="是否曝光")
     create_date = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     update_date = models.DateTimeField(default=timezone.now, verbose_name="更新时间")
 
