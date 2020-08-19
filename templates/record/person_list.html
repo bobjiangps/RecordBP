@@ -21,9 +21,9 @@
                     <td scope="col"><a href="{% url 'person_detail' bp.id %}">{{ bp.name }}</td>
                     <td scope="col">
                         {% if bp.expose %}
-                        <strong style="color: blue">已曝光</strong>
+                        <span style="color: blue">已曝光</span>
                         {% else %}
-                        <strong style="color: red">还未曝光</strong>
+                        <span style="color: red">未曝光</span>
                         {% endif %}
                     </td>
                     <td scope="col">{{ bp.brief|safe }}</td>
