@@ -21,6 +21,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('record.urls')),
+    path('f/', include('files.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     # path('search/', include('haystack.urls')),
 ]

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'record',
+    'files',
     # 'haystack',
     'ckeditor',
     'ckeditor_uploader',
